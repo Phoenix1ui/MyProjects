@@ -1,0 +1,27 @@
+# Guards the hand-edited curriculum and the data layer on every push. Nothing
+# here deploys anything; hosting is a root-directory setting on Vercel/Netlify.
+name: bench-log
+
+on:
+  push:
+    paths: ['bench-log/**', '.github/workflows/bench-log.yml']
+  pull_request:
+    paths: ['bench-log/**', '.github/workflows/bench-log.yml']
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: bench-log
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: bench-log/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run lint
+      - run: npm run build
