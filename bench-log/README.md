@@ -10,7 +10,9 @@ questions:
 4. What evidence have I collected, and what's still missing?
 
 Not an LMS, not a gradebook, nothing students log into. One user, one club, one
-year. The reasoning is in [`docs/BUILD-SPEC.md`](docs/BUILD-SPEC.md); the rules
+year. The club meets **Tuesdays and Wednesdays, 3:15–4:00**, and the year is
+paced for it: 20 units over 64 short sessions, Tuesday starting a thing and
+Wednesday finishing it. The reasoning is in [`docs/BUILD-SPEC.md`](docs/BUILD-SPEC.md); the rules
 that override design instinct, and the decisions made, are in
 [`CLAUDE.md`](CLAUDE.md).
 
@@ -58,6 +60,10 @@ On a laptop all eight sit in a sidebar.
 ## Things worth knowing
 
 - **Student data is first name plus last initial, nothing else.** Enforced at input.
+- **The schedule lives in `src/content/schedule.ts`.** Today defaults to the club
+  day you're standing in (or the last one, if you're writing up on Thursday), and
+  warns quietly if you pick a day the club doesn't meet. Changing days or times
+  is a one-line edit.
 - **Curriculum lives in `src/content/` as TypeScript**, edited in an editor and
   versioned in git. `npm test` checks its integrity. There is no admin UI for it.
 - **Ratings are meant to be taken on Today**, right after attendance, for the

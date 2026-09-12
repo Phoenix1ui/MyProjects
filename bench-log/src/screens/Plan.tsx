@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Link, useNavigate } from 'react-router-dom';
-import { checkpoints, conceptsInOrder, unitById, unitsInOrder } from '../content';
+import { checkpoints, conceptsInOrder, schedule, unitById, unitsInOrder } from '../content';
 import { db } from '../db/schema';
 import { getSetting, setCursorUnit } from '../db/records';
 import { SETTING } from '../db/types';
-import { daysAgo } from '../lib/dates';
+import { daysAgo, isClubDay, nextClubDay, shortDate, today } from '../lib/dates';
 import { Icon, type IconName } from '../ui/Icon';
 import { Card, Pill, Progress, Screen, type Tone } from '../ui/primitives';
 
@@ -37,12 +37,16 @@ export default function Plan() {
   const exportWhen = daysAgo(lastExport ? Number(lastExport) : undefined);
   const records = attendance + sessions.length + evidence;
 
+  // "Club today" when it is a Tuesday or Wednesday, otherwise the next one.
+  const meetsToday = isClubDay(schedule.days, today());
+  const when = meetsToday ? `Club today, ${schedule.time}` : `Next: ${shortDate(nextClubDay(schedule.days))}, ${schedule.time}`;
+
   return (
-    <Screen title="Plan" subtitle="The night before, on the laptop.">
+    <Screen title="Plan" subtitle={schedule.label}>
       <Card className="space-y-3">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="eyebrow">Next up</p>
+            <p className="eyebrow">{when}</p>
             <h2 className="mt-0.5 text-lg leading-snug font-bold">
               {next.order}. {next.title}
             </h2>

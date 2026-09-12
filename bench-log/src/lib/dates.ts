@@ -44,3 +44,27 @@ export function daysSince(ms: number | undefined, now = Date.now()): number | un
   if (!ms) return undefined;
   return Math.floor((now - ms) / 86_400_000);
 }
+
+/** True when `iso` falls on one of the club's weekdays. */
+export function isClubDay(days: number[], iso: string): boolean {
+  const [y, m, d] = iso.split('-').map(Number);
+  return days.includes(new Date(y, m - 1, d).getDay());
+}
+
+/** The most recent club day on or before `from`. Today, if today is one. */
+export function lastClubDay(days: number[], from: Date = new Date()): string {
+  for (let back = 0; back < 7; back++) {
+    const d = new Date(from.getFullYear(), from.getMonth(), from.getDate() - back);
+    if (days.includes(d.getDay())) return isoDate(d);
+  }
+  return isoDate(from);
+}
+
+/** The next club day strictly after `from`. */
+export function nextClubDay(days: number[], from: Date = new Date()): string {
+  for (let ahead = 1; ahead <= 7; ahead++) {
+    const d = new Date(from.getFullYear(), from.getMonth(), from.getDate() + ahead);
+    if (days.includes(d.getDay())) return isoDate(d);
+  }
+  return isoDate(from);
+}

@@ -4,6 +4,7 @@ import {
   checkpoints,
   conceptById,
   concepts,
+  schedule,
   totalSessions,
   units,
 } from '../content';
@@ -55,13 +56,15 @@ describe('units', () => {
     }
   });
 
-  it('span 1 to 5 sessions each and roughly a school year in total', () => {
+  it('span 1 to 5 sessions each and a school year of twice-weekly meetings in total', () => {
     for (const u of units) {
       expect(u.sessionCount, u.id).toBeGreaterThanOrEqual(1);
       expect(u.sessionCount, u.id).toBeLessThanOrEqual(5);
     }
-    expect(totalSessions).toBeGreaterThanOrEqual(28);
-    expect(totalSessions).toBeLessThanOrEqual(36);
+    // ~32 weeks x 2 club days, minus holidays and snow days.
+    expect(schedule.days.length).toBe(2);
+    expect(totalSessions).toBeGreaterThanOrEqual(56);
+    expect(totalSessions).toBeLessThanOrEqual(68);
   });
 
   it('cover every quarter, in quarter order', () => {

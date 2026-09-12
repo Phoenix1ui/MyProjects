@@ -40,7 +40,7 @@ vitest 5 peer range. `npm ci` honours it.
 ## Structure
 
 ```
-src/content/   the curriculum: 18 concepts, 17 units, 4 checkpoints, teaching notes
+src/content/   the curriculum: 18 concepts, 20 units, 4 checkpoints, the schedule, teaching notes
 src/db/        types, schema, records (every write), reads (queries + derivations), backup
 src/lib/       names, dates, levels (rating visuals), storage, useAutosave
 src/ui/        primitives, Icon, PrepBox, RatingChip, AutosaveTextarea
@@ -54,6 +54,13 @@ src/test/      data layer + content integrity. Zero UI tests, by instruction.
 
 ## Decisions, and why
 
+- **The schedule is content, in `src/content/schedule.ts`.** The club meets
+  Tuesdays and Wednesdays, 3:15–4:00. Two 45-minute sessions a week is roughly
+  the contact time of one long weekly session, so the year is paced as 20 units
+  over 64 sessions, in a Tuesday-starts-it, Wednesday-finishes-it rhythm. Today
+  defaults its date to the club day he is standing in, or the last one if he is
+  writing up on a Thursday; Plan shows the next meeting. Changing the days is a
+  one-line edit and the date tests pin the behaviour.
 - **Two contexts, two surfaces.** On a phone the bar has four tabs: Today,
   Roster, Class, Plan. On a laptop a sidebar shows all eight screens. Same routes.
   Planning screens carry a "Plan" back link on phones only.

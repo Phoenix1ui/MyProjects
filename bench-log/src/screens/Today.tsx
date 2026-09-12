@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Link } from 'react-router-dom';
-import { QUARTER_LABEL, conceptById, unitById, unitsInOrder } from '../content';
+import { QUARTER_LABEL, conceptById, schedule, unitById, unitsInOrder } from '../content';
 import { db } from '../db/schema';
 import {
   cycleRating,
@@ -18,7 +18,7 @@ import {
 } from '../db/records';
 import { attendanceForSession, listActiveStudents, ratingKey, ratingLookup } from '../db/reads';
 import { SETTING } from '../db/types';
-import { daysSince, shortDate, today } from '../lib/dates';
+import { daysSince, isClubDay, lastClubDay, shortDate } from '../lib/dates';
 import { firstName } from '../lib/names';
 import { levelOf } from '../lib/levels';
 import { AutosaveTextarea } from '../ui/AutosaveTextarea';
@@ -29,7 +29,10 @@ import { Card, ConceptChip, Empty, Eyebrow, Field, Notice, Pill } from '../ui/pr
 
 /** The screen used standing up, under time pressure. One thumb. */
 export default function Today() {
-  const [date, setDate] = useState(today());
+  // The club meets Tue and Wed, so "today" means the club day he is standing in
+  // — or the last one, if he is writing notes up on Thursday evening.
+  const clubDay = lastClubDay(schedule.days);
+  const [date, setDate] = useState(clubDay);
 
   const cursor = useLiveQuery(() => getSetting(SETTING.cursorUnit), [], undefined);
   const prepRows = useLiveQuery(() => db.prep.toArray(), [], []);
@@ -166,7 +169,7 @@ export default function Today() {
           ) : null}
         </div>
 
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
           <label htmlFor="session-date" className="eyebrow">
             Date
           </label>
@@ -174,15 +177,20 @@ export default function Today() {
             id="session-date"
             type="date"
             value={date}
-            onChange={(e) => setDate(e.target.value || today())}
+            onChange={(e) => setDate(e.target.value || clubDay)}
             className="control tap px-2.5 text-sm font-medium"
           />
-          {date === today() ? (
-            <span className="text-ink-3">{shortDate(date)}</span>
+          {date === clubDay ? (
+            <span className="text-ink-3">
+              {shortDate(date)} · {schedule.time}
+            </span>
           ) : (
-            <button type="button" onClick={() => setDate(today())} className="font-semibold text-moss">
-              Back to today
+            <button type="button" onClick={() => setDate(clubDay)} className="font-semibold text-moss">
+              Back to {shortDate(clubDay)}
             </button>
+          )}
+          {isClubDay(schedule.days, date) ? null : (
+            <span className="text-amber">Not a club day</span>
           )}
         </div>
 
