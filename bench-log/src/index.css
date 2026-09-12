@@ -1,0 +1,127 @@
+@import 'tailwindcss';
+
+/*
+ * The visual system, in one place.
+ *
+ * Grounded in the club's own materials: the green of a solder mask, the pale
+ * grey-green of an engineering pad, ink. One loud colour (amber) for the two
+ * things that need attention: a unit he has not prepped, and a concept the
+ * class is stuck on. Rating levels are a ramp of the accent, not a traffic
+ * light, so a "not yet" never paints a kid red.
+ *
+ * System fonts on purpose: the app must open with no network, and a font
+ * download has no place in an offline-first tool used standing up in a
+ * classroom. Identity comes from weight, scale, tracking and numerals instead.
+ *
+ * Light only, on purpose. It is used under classroom lights; backgrounds and
+ * colours are set explicitly everywhere so it holds on any host ground.
+ */
+@theme {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+
+  --color-paper: #f3f6f4;
+  --color-surface: #ffffff;
+  --color-ink: #16211d;
+  --color-ink-2: #4d5e57;
+  --color-ink-3: #8a9791;
+  --color-line: #d6ded9;
+  --color-line-2: #e8eeeb;
+
+  --color-moss: #1f7a5c;
+  --color-moss-deep: #145a43;
+  --color-moss-tint: #e3f2ea;
+
+  --color-level0: #e5ebe8;
+  --color-level1: #a9dcc6;
+
+  --color-amber: #a8540a;
+  --color-amber-deep: #7c3d05;
+  --color-amber-tint: #fff4e1;
+  --color-amber-line: #f0c98a;
+
+  --radius-card: 0.75rem;
+  --radius-control: 0.5rem;
+}
+
+:root {
+  color-scheme: light;
+  /* Room for the fixed bottom bar plus the phone's home indicator. */
+  --bar-height: 3.75rem;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  @apply bg-paper text-ink antialiased;
+  overscroll-behavior-y: none;
+}
+
+button,
+[role='button'],
+a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button {
+  user-select: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-moss);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Every session-screen tap target clears 44px (non-negotiable 1). */
+@utility tap {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+}
+
+@utility card {
+  @apply rounded-(--radius-card) border border-line bg-surface;
+}
+
+@utility eyebrow {
+  @apply text-[0.68rem] font-semibold tracking-[0.08em] text-ink-3 uppercase;
+}
+
+@utility control {
+  @apply rounded-(--radius-control) border border-line bg-surface text-ink outline-none focus:border-moss;
+}
+
+@utility btn {
+  @apply tap inline-flex items-center justify-center gap-1.5 rounded-(--radius-control) px-3.5 text-sm font-semibold transition-colors disabled:opacity-40;
+}
+
+@utility btn-primary {
+  @apply bg-ink text-white active:bg-ink-2;
+}
+
+@utility btn-quiet {
+  @apply border border-line bg-surface text-ink-2 active:bg-line-2;
+}
+
+@utility btn-loud {
+  @apply bg-amber text-white active:bg-amber-deep;
+}
+
+@utility btn-moss {
+  @apply bg-moss text-white active:bg-moss-deep;
+}
+
+@utility prose-body {
+  @apply text-[0.95rem] leading-relaxed text-ink-2;
+}
